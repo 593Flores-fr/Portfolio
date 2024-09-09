@@ -81,7 +81,6 @@
                                         </ul>
                                     </li>
                                     <li class="link menu-timeline"><a class="ajax-link" data-type="page-transition" href="about.html"><div class="before-span"><span data-hover="Presentation">Presentation</span></div></a></li>
-                                    <li class="link menu-timeline"><a class="ajax-link" data-type="page-transition" href="about.html/tarifs"><div class="before-span"><span data-hover="Tarifs">Tarifs</span></div></a></li>
                                     <li class="link menu-timeline"><a class="ajax-link" data-type="page-transition" href="contact.html"><div class="before-span"><span data-hover="Contactez-moi">Contactez-moi</span></div></a></li>
                                     </li>
                                 </ul>            
@@ -457,6 +456,17 @@
     <script src="js/common.js"></script>
     <script src="js/contact.js"></script>
     <script src="js/scripts.js"></script>
+
+    <script>
+        window.onload = function() {
+            if (window.location.hash) {
+                var element = document.querySelector(window.location.hash);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+    </script>
 
 
 
