@@ -30,10 +30,46 @@ Function CustomFunction
 ---------------------------------------------------*/
 
 	function CustomFunction() {
-		
-		//Add here your custom js code
-		
+		HeroFlowers();
 	}// End CustomFunction
+
+
+/*--------------------------------------------------
+Function Hero Flowers
+---------------------------------------------------*/
+
+	function HeroFlowers() {
+		var container = document.getElementById('hero-flowers-bg');
+		if (!container) return;
+
+		var symbols = ['✿', '❀', '✾', '❁', '⚘'];
+		var count   = 24;
+
+		for (var i = 0; i < count; i++) {
+			var petal = document.createElement('span');
+			petal.className = 'hero-petal';
+			petal.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+
+			var left      = 1  + Math.random() * 98;
+			var size      = 10 + Math.random() * 16;
+			var duration  = 20 + Math.random() * 22;
+			var delay     = -(Math.random() * duration);
+			var drift     = (Math.random() - 0.5) * 180;
+			var spin      = (Math.random() > 0.5 ? 1 : -1) * (200 + Math.random() * 260);
+			var peakOp    = 0.04 + Math.random() * 0.1;
+
+			petal.style.cssText = [
+				'left:'       + left     + '%;',
+				'font-size:'  + size     + 'px;',
+				'--drift:'    + drift    + 'px;',
+				'--spin:'     + spin     + 'deg;',
+				'--peak-op:'  + peakOp   + ';',
+				'animation: petalFall ' + duration + 's linear ' + delay + 's infinite;'
+			].join('');
+
+			container.appendChild(petal);
+		}
+	}
 	
 	
 	
@@ -183,21 +219,6 @@ Function Page Load
 		
 		gsap.set($(".menu-timeline .before-span"), {y: 120, opacity:0});
 		
-		// Page Navigation Events
-		$(".preloader-wrap").on('mouseenter', function() {	
-			var $this = $(this);			
-			gsap.to('#ball', {duration: 0.3, borderWidth: '2px', scale: 1.4, borderColor:"rgba(255,255,255,0)", backgroundColor:"rgba(255,255,255,0.1)"});
-			gsap.to('#ball-loader', {duration: 0.2, borderWidth: '2px', top: 2, left: 2});
-			$("#ball").addClass("with-blur");
-			$( "#ball" ).append( '<p class="center-first">' + $this.data("centerline") + '</p>' );				
-		});
-							
-		$(".preloader-wrap").on('mouseleave', function() {					
-			gsap.to('#ball', {duration: 0.2, borderWidth: '4px', scale:0.5, borderColor:'#999999', backgroundColor:'transparent'});
-			gsap.to('#ball-loader', {duration: 0.2, borderWidth: '4px', top: 0, left: 0});
-			$("#ball").removeClass("with-blur");
-			$('#ball p').remove();			
-		});
 		
 		$('body').removeClass('hidden').removeClass('hidden-ball');
 		
@@ -210,13 +231,10 @@ Function Page Load
 				gsap.to('#ball', {duration: 0.2, borderWidth: '4px', scale:0.5, borderColor:'#999999', backgroundColor:'transparent'});
 				gsap.to('#ball-loader', {duration: 0.2, borderWidth: '4px', top: 0, left: 0});
 				$('#ball p').remove();
-				gsap.to($(".percentage-wrapper"), {duration: 0.7, x:$(".trackbar").width()*0.5 - $(".percentage-wrapper").width() * 0.5, delay:0.3, ease:Power4.easeOut});
-				gsap.to($(".percentage"), {duration: 0.7, opacity:0, y:-100, delay:1, ease:Power4.easeInOut});
-				gsap.to($(".percentage-intro"), {duration: 0.5, opacity:0, delay:0, ease:Power4.easeInOut});
-				gsap.to($(".preloader-intro span"), {duration: 0.7, opacity:0, xPercent: -101, delay:0.3, ease:Power4.easeOut});
-				gsap.to($(".trackbar"), {duration: 0.7, clipPath: 'inset(0% 0%)', delay:0.3, ease:Power3.easeOut});										
-				gsap.to($(".preloader-wrap"), {duration: 0.3, opacity:0, delay:1, ease:Power2.easeOut});
-				gsap.set($(".preloader-wrap"), {visibility:'hidden', delay:1.3, yPercent: -101});										
+				gsap.to('.preloader-logo', {duration: 0.4, opacity: 0, scale: 0.97, ease: Power2.easeIn});
+				gsap.to('.preloader-line-wrap', {duration: 0.35, opacity: 0, ease: Power2.easeIn, delay: 0.1});
+				gsap.to($(".preloader-wrap"), {duration: 0.85, opacity: 0, delay: 0.3, ease: Power2.easeOut});
+				gsap.set($(".preloader-wrap"), {visibility: 'hidden', delay: 1.2});										
 				
 				setTimeout(function(){
 					$("#ball").removeClass("with-blur");
@@ -375,39 +393,17 @@ Function Page Load
 				EstimatedTime = -(perfData.loadEventEnd - perfData.navigationStart),
 				time = 1000
 				
+			// Fade in preloader logo
+			gsap.to('.preloader-logo', {duration: 0.9, opacity: 1, ease: Power2.easeOut, delay: 0.15});
+
 			// Loadbar Animation
 			$(".loadbar").animate({
 				width: width + "%"
-			}, time  );	
-			
-			// Percentage Increment Animation
-			var PercentageID = $("#precent"),
-					start = 0,
-					end = 100,
-					durataion = time + 0;
-					animateValue(PercentageID, start, end, durataion);
-					
-			function animateValue(id, start, end, duration) {
-			  
-				var range = end - start,
-				  current = start,
-				  increment = end > start? 1 : -1,
-				  stepTime = Math.abs(Math.floor(duration / range)),
-				  obj = $(id);
-				
-				var timer = setInterval(function() {
-					current += increment;
-					$(obj).text(current);
-				  //obj.innerHTML = current;
-					if (current == end) {
-						clearInterval(timer);
-					}
-				}, stepTime);
-			}
-			
-			// Fading Out Loadbar on Finised
-			setTimeout(function(){				
-				initOnFirstLoad();						  
+			}, time);
+
+			// Trigger reveal after load
+			setTimeout(function(){
+				initOnFirstLoad();
 			}, time);
 		
 		} else {			
